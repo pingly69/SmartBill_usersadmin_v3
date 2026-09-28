@@ -14,7 +14,7 @@
 1. **Single Source of Truth (SSOT):** รวมตาราง `users_profile` และ `approve_users` ให้เป็นตารางเดียว (`users_profile`) ขจัดปัญหาข้อมูลขัดแย้ง (Data Inconsistency) และ Race Conditions
 2. **Unified Schema with Complete Attributes:** รองรับข้อมูลครบถ้วนทั้ง `pc_limit` (วงเงินสดย่อย), `display_name` (ชื่อ LINE Profile), `avatar_url`, `screen_tags` และ `approve_tags`
 3. **Tag-Based Authorization (SQLite JSON1):** จัดเก็บสิทธิ์ในรูปแบบ JSON Array เช่น `["คุมวงเงินสด", "อนุมัติวงเงินสด"]` สามารถค้นหาและกรองผู้อนุมัติได้รวดเร็วผ่าน `json_each()` รองรับการขยายสิทธิ์ไปยัง Web Application อื่นๆ ในองค์กรได้ทันทีโดยไม่ต้องแก้โครงสร้างตาราง
-4. **100% Dual-Interface Compatibility:** รองรับการทำงานร่วมกับ UI เดิม (`OLD_UI`) แบบ 100% โดย API Gateway จะแปลงข้อมูลระหว่าง Tag-based และ Legacy fields (`pc_limit`, `pettycash_control`, `can_approve`, `Request_Name`, `displayName`) อัตโนมัติ
+4. **100% Dual-Interface Compatibility:** รองรับการทำงานร่วมกับระบบและ Payload เดิมแบบ 100% โดย API Gateway จะแปลงข้อมูลระหว่าง Tag-based และ Legacy fields (`pc_limit`, `pettycash_control`, `can_approve`, `Request_Name`, `displayName`) อัตโนมัติ
 5. **Local-First & Zero Extra Infrastructure:** รันและทดสอบที่เครื่อง Local ด้วย Cloudflare Wrangler Dev (`wrangler dev`) โดยใช้ฐานข้อมูล SQLite เสมือนจริงตรงกับ Production 100%
 
 ---
@@ -40,6 +40,10 @@ SmartBill_usersadmin_v3/
 │   └── services/
 │       ├── auth.service.ts       # บริการตรวจสอบ PIN และผูกบัญชี LINE
 │       └── user.service.ts       # บริการ CRUD และค้นหาตาม Tag
+├── old_data/                     # เครื่องมือและ Runbook สำหรับ Migrate ข้อมูลจริงตอน Go-Live
+│   ├── DATA_MIGRATION_RUNBOOK.md # คู่มือขั้นตอนการย้ายข้อมูลทีละขั้นตอน
+│   ├── migrate_etl.py            # สคริปต์ ETL รวมชีต Billing_data.xlsx
+│   └── *.sql                     # สคริปต์สร้างและแปลงโครงสร้างข้อมูล
 ├── wrangler.toml                 # Cloudflare Worker Configuration
 ├── package.json                  # Dependencies & Run Scripts
 ├── tsconfig.json                 # TypeScript Compiler Config
