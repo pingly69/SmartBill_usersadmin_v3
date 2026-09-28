@@ -1,0 +1,23 @@
+name = "smartbill-usersadmin-api"
+main = "src/index.ts"
+compatibility_date = "2024-09-01"
+compatibility_flags = [ "nodejs_compat" ]
+
+# Static Assets: serves the web frontend (HTML, CSS, JS)
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# D1 Database Binding (Connected to Cloudflare D1 IMG_DB)
+[[d1_databases]]
+binding = "DB"
+database_name = "IMG_DB"
+database_id = "4db03e65-cc9d-458e-81f7-b8119669dd17"
+
+# Environment Variables
+[vars]
+ADMIN_PINCODE = "999999"
+CORS_ALLOW_ORIGIN = "*"
+PIN_MIN = 100000
+PIN_MAX = 999999
+PIN_LENGTH = 6

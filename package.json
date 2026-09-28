@@ -1,0 +1,26 @@
+{
+  "name": "smartbill-usersadmin",
+  "version": "3.1.0",
+  "description": "SmartBill Users Admin (Petty Cash User & Unified Approver Management)",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "d1:init": "wrangler d1 execute IMG_DB --local --file=./src/db/schema.sql",
+    "d1:seed": "wrangler d1 execute IMG_DB --local --file=./src/db/seed.sql",
+    "test": "node test_suite.js",
+    "migrate:etl": "python old_data/migrate_etl.py",
+    "migrate:local": "wrangler d1 execute IMG_DB --local --file=./old_data/migrated_users.sql",
+    "migrate:remote": "wrangler d1 execute IMG_DB --remote --file=./old_data/cloud_migrated_users.sql",
+    "cloud:schema": "wrangler d1 execute IMG_DB --remote --file=./old_data/cloud_migration_schema.sql",
+    "cloud:migrate": "wrangler d1 execute IMG_DB --remote --file=./old_data/cloud_migrated_users.sql",
+    "cloud:verify": "wrangler d1 execute IMG_DB --remote --command=\"SELECT count(*) as total_users, sum(case when pc_limit > 0 then 1 else 0 end) as users_with_limit, sum(case when approve_tags != '[]' then 1 else 0 end) as approvers_count FROM users_profile;\"",
+    "deploy": "wrangler deploy",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260925.1",
+    "typescript": "^5.5.4",
+    "wrangler": "^4.141.0"
+  }
+}
